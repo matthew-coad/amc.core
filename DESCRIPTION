@@ -11,3 +11,11 @@ RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Imports: 
+    dplyr,
+    lubridate,
+    readr,
+    rlang,
+    tibble,
+    tidync,
+    tidyr
