@@ -5,7 +5,7 @@
 \alias{co2earth_datasource}
 \title{Earths CO2 data source}
 \format{
-An object of class \code{amc_dataset} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
+An object of class \code{amc_datasource} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
 }
 \usage{
 co2earth_datasource

@@ -5,7 +5,7 @@
 \alias{gistemp_zonal_annual_means_dataset}
 \title{Zonal Annual Mean Temperature Anomaly, 1880-present}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
+An object of class \code{amc_dataset} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
 }
 \usage{
 gistemp_zonal_annual_means_dataset

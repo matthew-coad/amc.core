@@ -5,7 +5,7 @@
 \alias{temprecord_nhtr_dataset}
 \title{2,000 Year Northern Hemisphere Temperature Anomaly Temperature Reconstruction data set}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
+An object of class \code{amc_dataset} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
 }
 \usage{
 temprecord_nhtr_dataset

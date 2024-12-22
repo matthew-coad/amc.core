@@ -16,6 +16,8 @@ Imports:
     lubridate,
     readr,
     rlang,
+    thredds,
     tibble,
     tidync,
-    tidyr
+    tidyr,
+    withr

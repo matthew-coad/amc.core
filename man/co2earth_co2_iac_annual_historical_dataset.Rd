@@ -5,7 +5,7 @@
 \alias{co2earth_co2_iac_annual_historical_dataset}
 \title{IAC Switzerland Global CO2 Yearly Dataset}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
+An object of class \code{amc_dataset} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
 }
 \usage{
 co2earth_co2_iac_annual_historical_dataset

@@ -5,7 +5,7 @@
 \alias{test_datasource}
 \title{Datasource used to perform internal testing of amc}
 \format{
-An object of class \code{amc_dataset} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
+An object of class \code{amc_datasource} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
 }
 \usage{
 test_datasource

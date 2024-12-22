@@ -88,7 +88,7 @@ download_ncei_total_solar_irradiance <- function() {
     url <- paste0(http_service_url, urlpath)
     message(paste0("[i] downloading ", filename, " (", dataset_index, " of ", dataset_count, ")"))
     destfile <- get_amc_dataset_path(ncei_total_solar_irradiance_dataset, filename)
-    download.file(url = url, destfile = destfile, mode = "wb")
+    utils::download.file(url = url, destfile = destfile, mode = "wb")
     files[dataset_index] <- normalizePath(destfile)
     dataset_index <- dataset_index + 1
   }
@@ -117,8 +117,8 @@ read_ncei_total_solar_irradiance_datafile <- function(datafile) {
       date = lubridate::ymd(.data$time)
     ) |>
     dplyr::select(
-      zone_type_code,
-      zone_code,
+      .data$zone_type_code,
+      .data$zone_code,
       date,
       solar_irradiance = .data$TSI,
       solar_irradiance_uncertainty = .data$TSI_UNC

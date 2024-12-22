@@ -5,7 +5,7 @@
 \alias{ncei_total_solar_irradiance_dataset}
 \title{NCEI total solar irradiance meta information}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
+An object of class \code{amc_dataset} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1 rows and 3 columns.
 }
 \usage{
 ncei_total_solar_irradiance_dataset
