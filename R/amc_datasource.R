@@ -5,7 +5,7 @@
 #'
 #' @examples
 #' amc_datasource_class %in% class(gistemp_datasource)
-amc_datasource_class <- "amc_dataset"
+amc_datasource_class <- "amc_datasource"
 
 #' Create new amc datasource
 #'

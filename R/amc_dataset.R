@@ -1,22 +1,49 @@
+#' Class that indicates an object is an amc dataset
+#'
+#' @export
+#'
+#' @examples
+#' amc_dataset_class %in% class(test_dataset1)
+amc_dataset_class <- "amc_dataset"
 
-get_amc_dataset <- function(datasource) {
-  func_name <- paste0("get_", datasource$datasource_code, "_dataset")
-  dataset_func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
-  if (!is.null(dataset_func)) {
-    dataset_func(datasource)
-  } else {
-    tibble::tibble(
-      datasource_code = character(),
-      dataset_code = character()
-    )
-  }
-}
-
+#' Create new amc dataset
+#'
+#' @param datasource_code Code of owning data source
+#' @param dataset_code Unique dataset code
+#' @param dataset_name Data set name
+#'
+#' @returns Dataset tibble
+#' @export
+#'
+#' @examples
+#' new_amc_dataset(test_datasource_code, test_dataset1_code, "Test dataset1")
 new_amc_dataset <- function(datasource_code, dataset_code, dataset_name) {
-  tibble::tibble(
+  dataset <- tibble::tibble(
     datasource_code = datasource_code,
     dataset_code,
-    dataset_name)
+    dataset_name
+  )
+  class(dataset) <- c(amc_dataset_class, class(dataset))
+  dataset
+}
+
+#' List all available amc datasets
+#'
+#' @return Tibble
+#' @export
+#'
+#' @examples
+#' list_amc_dataset()
+list_amc_dataset <- function() {
+  packages <- base::search() |> purrr::discard(\(x) x == ".GlobalEnv" | x == "Autoloads")
+  object_names <- packages |>
+    purrr::map(ls) |>
+    unlist(recursive = TRUE) |>
+    unique()
+  amc_datasource <- object_names |>
+    purrr::map(get) |>
+    purrr::keep(\(x)amc_dataset_class %in% class(x))
+  dplyr::bind_rows(amc_datasource)
 }
 
 #' Non-destructively prepares data set repository for use
@@ -52,23 +79,20 @@ import_amc_dataset_file <- function(dataset, filepath) {
   file.copy(filepath, repository_path, overwrite=TRUE)
 }
 
-#' List all available amc datasets
-#'
-#' @return Tibble
-#' @export
-#'
-#' @examples
-#' list_amc_dataset()
-list_amc_dataset <- function() {
-  dplyr::bind_rows(
-    list_gistemp_dataset(),
-    list_issi_dataset(),
-    list_temprecord_dataset(),
-    list_co2earth_dataset(),
-    list_ncei_dataset()
-  )
-}
-
 get_amc_dataset_func <- function() {
   tryCatch(match.fun("get_amc_dataset"), error = function(cond) NULL)
 }
+
+get_amc_dataset <- function(datasource) {
+  func_name <- paste0("get_", datasource$datasource_code, "_dataset")
+  dataset_func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
+  if (!is.null(dataset_func)) {
+    dataset_func(datasource)
+  } else {
+    tibble::tibble(
+      datasource_code = character(),
+      dataset_code = character()
+    )
+  }
+}
+

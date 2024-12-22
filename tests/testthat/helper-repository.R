@@ -18,14 +18,14 @@ get_local_test_repository_path <- function(test_name) {
 #' @param test_name Name of the test
 #'
 #' @returns Repository file path as a character vector
-prepare_local_test_repository <- function(test_name) {
+prepare_local_test_repository <- function(test_name, env = parent.frame()) {
   repository_path <- get_local_test_repository_path(test_name)
   if (file.exists(repository_path)){
     unlink(repository_path, recursive=TRUE)
   }
   dir.create(repository_path, recursive=TRUE)
-  op <- options(amc.repository.path = repository_path)
-  withr::defer_parent(options(op))
+  withr::local_options(list(amc.repository.path = repository_path), .local_envir = env)
+  withr::defer(unlink(repository_path, recursive=TRUE), envir = env)
   repository_path
 }
 
