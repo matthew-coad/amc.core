@@ -1,19 +1,21 @@
 test_that("new_amc_dataset returns initialized dataset", {
-  test_dataset <- new_amc_dataset("test_datasource", "test_dataset", "New dataset test")
+  test_datasource <- new_amc_datasource("test_datasource", "Test datasource", "http:\\example.com")
+  test_dataset <- new_amc_dataset(test_datasource, "test_dataset", "New dataset test")
   expect_equal(test_dataset$datasource_code, "test_datasource")
   expect_equal(test_dataset$dataset_code, "test_dataset")
   expect_equal(test_dataset$dataset_name, "New dataset test")
 })
 
 test_that("New dataset class includes amc_dataset_class", {
-  test_dataset <- new_amc_dataset("test_datasource", "test_dataset", "New dataset test")
+  test_datasource <- new_amc_datasource("test_datasource", "Test datasource", "http:\\example.com")
+  test_dataset <- new_amc_dataset(test_datasource, "test_dataset", "New dataset test")
   expect_contains(class(test_dataset),  amc_dataset_class)
 })
 
 test_that("list_amc_datasource includes test datasource", {
   datasource <- list_amc_datasource()
-  test_datasource <- datasource |> dplyr::filter(datasource_code == test_datasource_code)
-  expect_equal(test_datasource$datasource_code,  test_datasource_code)
+  test_datasource <- datasource |> dplyr::filter(datasource_code == test_datasource$datasource_code)
+  expect_equal(test_datasource$datasource_code,  test_datasource$datasource_code)
 })
 
 test_that("prepare_amc_dataset_repository creates repository folder", {
@@ -46,13 +48,15 @@ test_that("get_download_amc_dataset gets func if it exists", {
 })
 
 test_that("get_download_amc_dataset returns null if it doesnt exist", {
-  test_dataset <- new_amc_dataset("test_datasource", "test_dataset", "New dataset test")
+  test_datasource <- new_amc_datasource("test_datasource", "Test datasource", "http:\\example.com")
+  test_dataset <- new_amc_dataset(test_datasource, "test_dataset", "New dataset test")
   func <- get_download_amc_dataset_func(test_dataset)
   expect_null(func)
 })
 
 test_that("get_download_amc_dataset fails if its required and doesnt exist", {
-  test_dataset <- new_amc_dataset("test_datasource", "test_dataset", "New dataset test")
+  test_datasource <- new_amc_datasource("test_datasource", "Test datasource", "http:\\example.com")
+  test_dataset <- new_amc_dataset(test_datasource, "test_dataset", "New dataset test")
   expect_error(get_download_amc_dataset_func(test_dataset, required = TRUE), regexp = "dataset downloader download_test_dataset_dataset not found")
 })
 

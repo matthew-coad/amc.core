@@ -8,7 +8,7 @@ amc_dataset_class <- "amc_dataset"
 
 #' Create new amc dataset
 #'
-#' @param datasource_code Code of owning data source
+#' @param datasource Datasource that owns the dataset
 #' @param dataset_code Unique dataset code
 #' @param dataset_name Data set name
 #'
@@ -16,10 +16,10 @@ amc_dataset_class <- "amc_dataset"
 #' @export
 #'
 #' @examples
-#' new_amc_dataset(test_datasource_code, test_dataset1_code, "Test dataset1")
-new_amc_dataset <- function(datasource_code, dataset_code, dataset_name) {
+#' new_amc_dataset(test_datasource, "test_dataset1", "Test dataset1")
+new_amc_dataset <- function(datasource, dataset_code, dataset_name) {
   dataset <- tibble::tibble(
-    datasource_code = datasource_code,
+    datasource_code = datasource$datasource_code,
     dataset_code,
     dataset_name
   )

@@ -1,12 +1,3 @@
-
-#' Met Office United Kingdom datasource code
-#'
-#' @export
-#'
-#' @examples
-#' metuk_datasource_code
-metuk_datasource_code <- "metuk"
-
 #' Met Office United Kingdom datasource
 #'
 #' @export
@@ -14,18 +5,10 @@ metuk_datasource_code <- "metuk"
 #' @examples
 #' metuk_datasource
 metuk_datasource <- new_amc_datasource(
-  metuk_datasource_code,
+  "metuk",
   "Met Office United Kingdom",
   "https://www.metoffice.gov.uk/"
 )
-
-#' Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Monthly Dataset Code
-#'
-#' @export
-#'
-#' @examples
-#' metuk_hadcet_monthly_dataset_code
-metuk_hadcet_monthly_dataset_code <- "metuk_hadcet_monthly"
 
 #' Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Monthly Dataset
 #'
@@ -34,18 +17,10 @@ metuk_hadcet_monthly_dataset_code <- "metuk_hadcet_monthly"
 #' @examples
 #' metuk_hadcet_monthly_dataset
 metuk_hadcet_monthly_dataset <- new_amc_dataset(
-  metuk_datasource_code,
-  metuk_hadcet_monthly_dataset_code,
+  metuk_datasource,
+  "metuk_hadcet_monthly",
   "Hadley Centre Central England Temperature (HadCET) monthly dataset"
 )
-
-#' Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Daily Dataset Code
-#'
-#' @export
-#'
-#' @examples
-#' metuk_hadcet_daily_dataset_code
-metuk_hadcet_daily_dataset_code <- "metuk_hadcet_daily"
 
 #' Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Daily Dataset
 #'
@@ -54,11 +29,10 @@ metuk_hadcet_daily_dataset_code <- "metuk_hadcet_daily"
 #' @examples
 #' metuk_hadcet_daily_dataset
 metuk_hadcet_daily_dataset <- new_amc_dataset(
-  metuk_datasource_code,
-  metuk_hadcet_daily_dataset_code,
+  metuk_datasource,
+  "metuk_hadcet_daily",
   "Hadley Centre Central England Temperature (HadCET) Daily dataset"
 )
-
 
 metuk_hadcet_daily_mean_filename <- "meantemp_daily_totals.txt"
 metuk_hadcet_daily_mean_url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/meantemp_daily_totals.txt"

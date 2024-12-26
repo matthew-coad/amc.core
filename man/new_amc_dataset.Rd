@@ -4,10 +4,10 @@
 \alias{new_amc_dataset}
 \title{Create new amc dataset}
 \usage{
-new_amc_dataset(datasource_code, dataset_code, dataset_name)
+new_amc_dataset(datasource, dataset_code, dataset_name)
 }
 \arguments{
-\item{datasource_code}{Code of owning data source}
+\item{datasource}{Datasource that owns the dataset}
 
 \item{dataset_code}{Unique dataset code}
 
@@ -20,5 +20,5 @@ Dataset tibble
 Create new amc dataset
 }
 \examples{
-new_amc_dataset(test_datasource_code, test_dataset1_code, "Test dataset1")
+new_amc_dataset(test_datasource, "test_dataset1", "Test dataset1")
 }

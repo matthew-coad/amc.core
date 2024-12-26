@@ -37,7 +37,12 @@ valid_tibble_colnames <-
   c(
     "year",
     "month",
-    "mean_temperature"
+    "date",
+
+    "zone_code",
+
+    "mean_temperature",
+    "co2"
   )
 
 expect_valid_amc_tibble <- function(object) {
