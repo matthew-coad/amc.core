@@ -18,5 +18,5 @@ Character vector
 Get path to a file within an amc dataset
 }
 \examples{
-get_amc_dataset_path(gistemp_zonal_annual_means_dataset, "ZonAnn.Ts+dSST.csv")
+get_amc_dataset_path(test_dataset1, "Test1.csv")
 }

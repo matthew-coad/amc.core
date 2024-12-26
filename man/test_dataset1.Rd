@@ -14,6 +14,6 @@ test_dataset1
 Dataset used to perform internal testing of AMC
 }
 \examples{
-test_datasource
+test_dataset1
 }
 \keyword{datasets}

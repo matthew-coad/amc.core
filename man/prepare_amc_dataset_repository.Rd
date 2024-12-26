@@ -16,5 +16,5 @@ Respository path
 Non-destructively prepares data set repository for use
 }
 \examples{
-prepare_amc_dataset_repository(gistemp_zonal_annual_means_dataset)
+prepare_amc_dataset_repository(test_dataset1)
 }

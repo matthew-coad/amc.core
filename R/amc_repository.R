@@ -28,13 +28,13 @@ get_amc_repository_path <- function() {
 
 #' Get Path used to store data related to a specific datasource
 #'
-#' @param datasource_code Code that uniquely identifies the datasource
+#' @param datasource Target datasource
 #'
 #' @return File path
 #' @export
 #'
 #' @examples
-#' get_amc_datasource_repository_path(gistemp_datasource)
+#' get_amc_datasource_repository_path(test_dataset1)
 get_amc_datasource_repository_path <- function(datasource) {
   file.path(get_amc_repository_path(), datasource$datasource_code)
 }
@@ -47,7 +47,7 @@ get_amc_datasource_repository_path <- function(datasource) {
 #' @export
 #'
 #' @examples
-#' get_amc_dataset_repository_path(gistemp_zonal_annual_means_dataset)
+#' get_amc_dataset_repository_path(test_dataset1)
 get_amc_dataset_repository_path <- function(dataset) {
   file.path(get_amc_repository_path(), dataset$datasource_code, dataset$dataset_code)
 }
@@ -61,7 +61,7 @@ get_amc_dataset_repository_path <- function(dataset) {
 #' @export
 #'
 #' @examples
-#' get_amc_dataset_path(gistemp_zonal_annual_means_dataset, "ZonAnn.Ts+dSST.csv")
+#' get_amc_dataset_path(test_dataset1, "Test1.csv")
 get_amc_dataset_path <- function(dataset, filename) {
   file.path(get_amc_dataset_repository_path(dataset), filename)
 }

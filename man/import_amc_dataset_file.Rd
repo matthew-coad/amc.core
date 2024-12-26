@@ -18,5 +18,5 @@ Import successfuly
 Import datafile into an amc datasets repository
 }
 \examples{
-import_amc_dataset_file(gistemp_zonal_annual_means_dataset, "ZonAnn.Ts+dSST.csv")
+import_amc_dataset_file(test_dataset1, "ZonAnn.Ts+dSST.csv")
 }

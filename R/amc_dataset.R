@@ -54,7 +54,7 @@ list_amc_dataset <- function() {
 #' @export
 #'
 #' @examples
-#' prepare_amc_dataset_repository(gistemp_zonal_annual_means_dataset)
+#' prepare_amc_dataset_repository(test_dataset1)
 prepare_amc_dataset_repository <- function(dataset) {
   repository_path <- get_amc_dataset_repository_path(dataset)
   if (!file.exists(repository_path)){
@@ -63,6 +63,23 @@ prepare_amc_dataset_repository <- function(dataset) {
   return(repository_path)
 }
 
+#' Non-destructively prepares a data set for use
+#'
+#' @param dataset Dataset to prepare
+#'
+#' @return Dataset state
+#' @export
+#'
+#' @examples
+#' prepare_amc_dataset(test_dataset1)
+prepare_amc_dataset <- function(dataset) {
+  prepare_amc_dataset_repository(dataset)
+  state <- read_amc_dataset_state(dataset)
+  if (state$status != amc_dataset_status$ready) {
+    state <- download_amc_dataset(dataset)
+  }
+  return(state)
+}
 
 #' Import datafile into an amc datasets repository
 #'
@@ -73,26 +90,104 @@ prepare_amc_dataset_repository <- function(dataset) {
 #' @export
 #'
 #' @examples
-#' import_amc_dataset_file(gistemp_zonal_annual_means_dataset, "ZonAnn.Ts+dSST.csv")
+#' import_amc_dataset_file(test_dataset1, "ZonAnn.Ts+dSST.csv")
 import_amc_dataset_file <- function(dataset, filepath) {
   repository_path <- prepare_amc_dataset_repository(dataset)
   file.copy(filepath, repository_path, overwrite=TRUE)
 }
 
-get_amc_dataset_func <- function() {
-  tryCatch(match.fun("get_amc_dataset"), error = function(cond) NULL)
+#' Get underlying download dataset implementation
+#'
+#' @param dataset Target Dataset
+#' @param required If true function is required and will fail if it is missing
+#'
+#' @returns Function that takes no parameters, NULL if function cannot be found
+get_download_amc_dataset_func <- function(dataset, required = FALSE) {
+  func_name <- paste0("download_", dataset$dataset_code, "_dataset")
+  func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
+  if (required && is.null(func)) {
+    stop("dataset downloader ", func_name, " not found")
+  }
+  return(func)
 }
 
-get_amc_dataset <- function(datasource) {
-  func_name <- paste0("get_", datasource$datasource_code, "_dataset")
-  dataset_func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
-  if (!is.null(dataset_func)) {
-    dataset_func(datasource)
+#' Download amc dataset
+#'
+#' @param dataset Dataset to download
+#'
+#' @returns Updated dataset status
+#' @export
+#'
+#' @examples
+#' download_amc_dataset(test_dataset1)
+download_amc_dataset <- function(dataset) {
+  get_download_amc_dataset_func(dataset, required = TRUE)()
+}
+
+#' Run download of an amc dataset.
+#'
+#' @param dataset The dataset to download
+#' @param downloader The script block that performs customised download
+#' @param envir The environment in which expr is to be evaluated.
+#'
+#'
+#' @returns Updated dataset status
+#' @export
+#'
+#' @examples
+#' run_download_amc_dataset(test_dataset1, {
+#'   test_datafile1_filepath <- get_amc_dataset_path(test_dataset1, test_datafile1_filename)
+#'   fileConn<-file(test_datafile1_filepath)
+#'   data_lines <- c(
+#'     "test_dimension1,test_measure1,test_measure2",
+#'     "Dimension-1-1,11,12",
+#'     "Dimension-2-1,21,22"
+#'   )
+#'   writeLines(data_lines, fileConn)
+#'   close(fileConn)
+#' })
+run_download_amc_dataset <- function(dataset, downloader, envir = parent.frame()) {
+  prepare_amc_dataset_repository(dataset)
+  save_amc_dataset_state(dataset, amc_dataset_status$downloading)
+  download_cond <- NULL
+  tryCatch(
+    eval(downloader, envir = envir),
+    error = function(cond) {
+      download_cond <<- cond
+      message(conditionMessage(cond))
+    }
+  )
+  if (is.null(download_cond)) {
+    return (save_amc_dataset_state(dataset, amc_dataset_status$ready, lubridate::now()))
   } else {
-    tibble::tibble(
-      datasource_code = character(),
-      dataset_code = character()
-    )
+    return (save_amc_dataset_state(dataset, amc_dataset_status$download_failed, fail_condition = download_cond))
   }
 }
 
+#' Get underlying read dataset implementation
+#'
+#' @param dataset Target Dataset
+#' @param required If true function is required and will fail if it is missing
+#'
+#' @returns Function that takes no parameters, NULL if function cannot be found
+get_read_amc_dataset_func <- function(dataset, required = FALSE) {
+  func_name <- paste0("read_", dataset$dataset_code)
+  func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
+  if (required && is.null(func)) {
+    stop("dataset reader ", func_name, " not found")
+  }
+  return(func)
+}
+
+#' Read amc dataset data
+#'
+#' @param dataset Dataset to read
+#'
+#' @returns Datasets data as AMC validated tibble
+#' @export
+#'
+#' @examples
+#' read_amc_dataset(test_dataset1)
+read_amc_dataset <- function(dataset) {
+  get_read_amc_dataset_func(dataset, required = TRUE)()
+}

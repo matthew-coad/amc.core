@@ -4,7 +4,7 @@
 #' @export
 #'
 #' @examples
-#' amc_datasource_class %in% class(gistemp_datasource)
+#' amc_datasource_class %in% class(test_dataset1)
 amc_datasource_class <- "amc_datasource"
 
 #' Create new amc datasource
@@ -17,7 +17,7 @@ amc_datasource_class <- "amc_datasource"
 #' @export
 #'
 #' @examples
-#'new_amc_datasource(gistemp_datasource_code, "GISTEMP v4", "https://data.giss.nasa.gov/gistemp/")
+#'new_amc_datasource("test_datasource", "Test datasource", "https://example.com/")
 new_amc_datasource <- function(datasource_code, datasource_name, datasource_reference_url) {
   datasource <- tibble::tibble(datasource_code, datasource_name, datasource_reference_url)
   class(datasource) <- c(amc_datasource_class, class(datasource))

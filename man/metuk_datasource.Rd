@@ -14,6 +14,6 @@ metuk_datasource
 Met Office United Kingdom datasource
 }
 \examples{
-iac_datasource
+metuk_datasource
 }
 \keyword{datasets}

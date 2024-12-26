@@ -20,5 +20,5 @@ Tibble
 Create new amc datasource
 }
 \examples{
-new_amc_datasource(gistemp_datasource_code, "GISTEMP v4", "https://data.giss.nasa.gov/gistemp/")
+new_amc_datasource("test_datasource", "Test datasource", "https://example.com/")
 }

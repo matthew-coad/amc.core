@@ -12,7 +12,7 @@ metuk_datasource_code <- "metuk"
 #' @export
 #'
 #' @examples
-#' iac_datasource
+#' metuk_datasource
 metuk_datasource <- new_amc_datasource(
   metuk_datasource_code,
   "Met Office United Kingdom",
@@ -69,47 +69,44 @@ metuk_hadcet_daily_min_url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/m
 metuk_hadcet_daily_max_filename <- "maxtemp_daily_totals.txt"
 metuk_hadcet_daily_max_url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/maxtemp_daily_totals.txt"
 
+#' Download Hadley Centre Central England Temperature (HadCET) Daily Dataset
+#'
+#' @returns Dataset state
+#' @export
+#'
+#' @examples
+#' download_metuk_hadcet_daily_dataset()
+download_metuk_hadcet_daily_dataset <- function() {
+  run_download_amc_dataset(metuk_hadcet_daily_dataset, {
+    metuk_hadcet_daily_mean_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_mean_filename)
+    utils::download.file(url = metuk_hadcet_daily_mean_url, destfile = metuk_hadcet_daily_mean_path, mode = "wb")
+
+    metuk_hadcet_daily_min_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_min_filename)
+    utils::download.file(url = metuk_hadcet_daily_min_url, destfile = metuk_hadcet_daily_min_path, mode = "wb")
+
+    metuk_hadcet_daily_max_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_max_filename)
+    utils::download.file(url = metuk_hadcet_daily_max_url, destfile = metuk_hadcet_daily_max_path, mode = "wb")
+  })
+}
+
 metuk_hadcet_monthly_mean_filename <- "meantemp_monthly_totals.txt"
 metuk_hadcet_monthly_mean_url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/meantemp_monthly_totals.txt"
 
 metuk_hadcet_monthly_min_filename <- "meantemp_monthly_totals.txt"
 metuk_hadcet_monthly_min_url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/meantemp_monthly_totals.txt"
 
-download_metuk_hadcet_daily <- function() {
-  prepare_amc_dataset_repository(metuk_hadcet_daily_dataset)
-  files <- c()
-
-  metuk_hadcet_daily_mean_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_mean_filename)
-  utils::download.file(url = metuk_hadcet_daily_mean_url, destfile = metuk_hadcet_daily_mean_path, mode = "wb")
-  files[1] <- normalizePath(metuk_hadcet_daily_mean_path)
-
-  metuk_hadcet_daily_min_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_min_filename)
-  utils::download.file(url = metuk_hadcet_daily_min_url, destfile = metuk_hadcet_daily_min_path, mode = "wb")
-  files[2] <- normalizePath(metuk_hadcet_daily_min_path)
-
-  metuk_hadcet_daily_max_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_max_filename)
-  utils::download.file(url = metuk_hadcet_daily_max_url, destfile = metuk_hadcet_daily_max_path, mode = "wb")
-  files[3] <- normalizePath(metuk_hadcet_daily_max_path)
-
-  files
-}
-
-#' Download
+#' Download met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Datasets
 #'
-#' @returns Vector of downloaded files
+#' @returns Dataset state
 #' @export
 #'
 #' @examples
-#' download_metuk_hadcet_monthly()
-download_metuk_hadcet_monthly <- function() {
-  prepare_amc_dataset_repository(metuk_hadcet_monthly_dataset)
-  files <- c()
-
-  metuk_hadcet_monthly_min_path <- get_amc_dataset_path(metuk_hadcet_monthly_dataset, metuk_hadcet_monthly_min_filename)
-  utils::download.file(url = metuk_hadcet_monthly_min_url, destfile = metuk_hadcet_monthly_min_path, mode = "wb")
-  files[1] <- normalizePath(metuk_hadcet_monthly_min_path)
-
-  files
+#' download_metuk_hadcet_monthly_dataset()
+download_metuk_hadcet_monthly_dataset <- function() {
+  run_download_amc_dataset(metuk_hadcet_monthly_dataset, {
+    metuk_hadcet_monthly_min_path <- get_amc_dataset_path(metuk_hadcet_monthly_dataset, metuk_hadcet_monthly_min_filename)
+    utils::download.file(url = metuk_hadcet_monthly_min_url, destfile = metuk_hadcet_monthly_min_path, mode = "wb")
+  })
 }
 
 #' Read Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Monthly Dataset
@@ -120,20 +117,22 @@ download_metuk_hadcet_monthly <- function() {
 #' @examples
 #' read_metuk_hadcet_monthly()
 read_metuk_hadcet_monthly <- function() {
-  col_names <- c("Year", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Annual")
+  prepare_amc_dataset(metuk_hadcet_monthly_dataset)
+  month_names <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+  col_names <- c("Year", month_names, "Annual")
   col_types <- "iddddddddddddd"
   metuk_hadcet_monthly_min_path <- get_amc_dataset_path(metuk_hadcet_monthly_dataset, metuk_hadcet_monthly_min_filename)
   readr::read_table(metuk_hadcet_monthly_min_path, col_names = col_names, col_types = col_types, skip = 5) |>
-    tidyr::pivot_longer(!Year, names_to = "Month", values_to = "mean_temperature" ) |>
-    dplyr::filter(Month != "Annual") |>
+    tidyr::pivot_longer(!"Year", names_to = "Month", values_to = "mean_temperature" ) |>
+    dplyr::filter(.data$Month != "Annual") |>
     dplyr::mutate(
-      dataset_code = metuk_hadcet_monthly_dataset_code,
-      date = lubridate::ymd(paste0(.data$Year, "-", .data$Month, "-1"))
+      year = .data$Year,
+      month = which(month_names == .data$Month),
     ) |>
     dplyr::select(
-      .data$dataset_code,
-      .data$date,
-      .data$mean_temperature
+      "year",
+      "month",
+      "mean_temperature"
     )
 }
 

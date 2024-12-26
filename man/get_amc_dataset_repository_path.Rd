@@ -16,5 +16,5 @@ File path as a character value
 Get Path used to store data related to a specific dataset
 }
 \examples{
-get_amc_dataset_repository_path(gistemp_zonal_annual_means_dataset)
+get_amc_dataset_repository_path(test_dataset1)
 }
