@@ -110,4 +110,53 @@ read_metuk_hadcet_monthly <- function() {
     )
 }
 
+#' Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Year Dataset
+#'
+#' @export
+#'
+#' @examples
+#' metuk_hadcet_monthly_dataset
+metuk_hadcet_yearly_dataset <- new_amc_dataset(
+  metuk_datasource,
+  "metuk_hadcet_yearly",
+  "Hadley Centre Central England Temperature (HadCET) yearly dataset"
+)
 
+
+#' Download met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Yearly Datasets
+#'
+#' @returns Dataset state
+#' @export
+#'
+#' @examples
+#' download_metuk_hadcet_monthly_dataset()
+download_metuk_hadcet_yearly_dataset <- function() {
+  run_download_amc_dataset(metuk_hadcet_monthly_dataset, {
+    # We use the monthly dataset, so nothing to do
+  })
+}
+
+#' Read Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Yearly Dataset
+#'
+#' @return Tibble
+#' @export
+#'
+#' @examples
+#' read_metuk_hadcet_monthly()
+read_metuk_hadcet_yearly <- function() {
+  # We use the monthly dataset, so prepare it instead
+  prepare_amc_dataset(metuk_hadcet_monthly_dataset)
+  month_names <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+  col_names <- c("Year", month_names, "Annual")
+  col_types <- "iddddddddddddd"
+  metuk_hadcet_monthly_min_path <- get_amc_dataset_path(metuk_hadcet_monthly_dataset, metuk_hadcet_monthly_min_filename)
+  readr::read_table(metuk_hadcet_monthly_min_path, col_names = col_names, col_types = col_types, skip = 5) |>
+    dplyr::mutate(
+      year = .data$Year,
+      mean_temperature = .data$Annual
+    ) |>
+    dplyr::select(
+      "year",
+      "mean_temperature"
+    )
+}
