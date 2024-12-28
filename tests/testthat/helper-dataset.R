@@ -69,7 +69,9 @@ valid_tibble_colnames <-
 
     "temperature_anomaly",
     "mean_temperature",
-    "co2"
+    "co2",
+    "solar_irradiance",
+    "solar_irradiance_uncertainty"
   )
 
 expect_valid_amc_tibble <- function(object) {

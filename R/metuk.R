@@ -19,7 +19,7 @@ metuk_datasource <- new_amc_datasource(
 metuk_hadcet_monthly_dataset <- new_amc_dataset(
   metuk_datasource,
   "metuk_hadcet_monthly",
-  "Hadley Centre Central England Temperature (HadCET) monthly dataset"
+  "Hadley Centre Central England Temperature (HadCET) monthly"
 )
 
 #' Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Daily Dataset
@@ -31,7 +31,7 @@ metuk_hadcet_monthly_dataset <- new_amc_dataset(
 metuk_hadcet_daily_dataset <- new_amc_dataset(
   metuk_datasource,
   "metuk_hadcet_daily",
-  "Hadley Centre Central England Temperature (HadCET) Daily dataset"
+  "Hadley Centre Central England Temperature (HadCET) Daily"
 )
 
 metuk_hadcet_daily_mean_filename <- "meantemp_daily_totals.txt"
@@ -96,7 +96,7 @@ read_metuk_hadcet_monthly_dataset <- function() {
 metuk_hadcet_yearly_dataset <- new_amc_dataset(
   metuk_datasource,
   "metuk_hadcet_yearly",
-  "Hadley Centre Central England Temperature (HadCET) yearly dataset"
+  "Hadley Centre Central England Temperature (HadCET) yearly"
 )
 
 

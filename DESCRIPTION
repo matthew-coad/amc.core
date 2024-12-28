@@ -18,5 +18,7 @@ Imports:
     purrr,
     readr,
     rlang,
+    thredds,
     tibble,
+    tidync,
     tidyr
