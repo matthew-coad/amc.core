@@ -27,5 +27,7 @@ Saved state
 Save AMC dataset state
 }
 \examples{
-save_amc_dataset_state(test_dataset1, amc_dataset_status$ready)
+\donttest{
+  save_amc_dataset_state(giss_ta_zonal_yearly_dataset, amc_dataset_status$ready)
+}
 }

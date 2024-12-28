@@ -2,19 +2,23 @@
 % Please edit documentation in R/amc_dataset.R
 \name{download_amc_dataset}
 \alias{download_amc_dataset}
-\title{Download amc dataset}
+\title{Download an amc dataset}
 \usage{
-download_amc_dataset(dataset)
+download_amc_dataset(dataset, envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset to download}
+
+\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Updated dataset status
 }
 \description{
-Download amc dataset
+Download an amc dataset
 }
 \examples{
-download_amc_dataset(test_dataset1)
+\donttest{
+  download_amc_dataset(giss_ta_zonal_yearly_dataset)
+}
 }

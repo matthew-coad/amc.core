@@ -44,23 +44,15 @@ metuk_hadcet_daily_max_filename <- "maxtemp_daily_totals.txt"
 metuk_hadcet_daily_max_url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/maxtemp_daily_totals.txt"
 
 #' Download Hadley Centre Central England Temperature (HadCET) Daily Dataset
-#'
-#' @returns Dataset state
-#' @export
-#'
-#' @examples
-#' download_metuk_hadcet_daily_dataset()
 download_metuk_hadcet_daily_dataset <- function() {
-  run_download_amc_dataset(metuk_hadcet_daily_dataset, {
-    metuk_hadcet_daily_mean_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_mean_filename)
-    utils::download.file(url = metuk_hadcet_daily_mean_url, destfile = metuk_hadcet_daily_mean_path, mode = "wb")
+  metuk_hadcet_daily_mean_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_mean_filename)
+  utils::download.file(url = metuk_hadcet_daily_mean_url, destfile = metuk_hadcet_daily_mean_path, mode = "wb")
 
-    metuk_hadcet_daily_min_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_min_filename)
-    utils::download.file(url = metuk_hadcet_daily_min_url, destfile = metuk_hadcet_daily_min_path, mode = "wb")
+  metuk_hadcet_daily_min_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_min_filename)
+  utils::download.file(url = metuk_hadcet_daily_min_url, destfile = metuk_hadcet_daily_min_path, mode = "wb")
 
-    metuk_hadcet_daily_max_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_max_filename)
-    utils::download.file(url = metuk_hadcet_daily_max_url, destfile = metuk_hadcet_daily_max_path, mode = "wb")
-  })
+  metuk_hadcet_daily_max_path <- get_amc_dataset_path(metuk_hadcet_daily_dataset, metuk_hadcet_daily_max_filename)
+  utils::download.file(url = metuk_hadcet_daily_max_url, destfile = metuk_hadcet_daily_max_path, mode = "wb")
 }
 
 metuk_hadcet_monthly_mean_filename <- "meantemp_monthly_totals.txt"
@@ -70,28 +62,13 @@ metuk_hadcet_monthly_min_filename <- "meantemp_monthly_totals.txt"
 metuk_hadcet_monthly_min_url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/meantemp_monthly_totals.txt"
 
 #' Download met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Datasets
-#'
-#' @returns Dataset state
-#' @export
-#'
-#' @examples
-#' download_metuk_hadcet_monthly_dataset()
 download_metuk_hadcet_monthly_dataset <- function() {
-  run_download_amc_dataset(metuk_hadcet_monthly_dataset, {
-    metuk_hadcet_monthly_min_path <- get_amc_dataset_path(metuk_hadcet_monthly_dataset, metuk_hadcet_monthly_min_filename)
-    utils::download.file(url = metuk_hadcet_monthly_min_url, destfile = metuk_hadcet_monthly_min_path, mode = "wb")
-  })
+  metuk_hadcet_monthly_min_path <- get_amc_dataset_path(metuk_hadcet_monthly_dataset, metuk_hadcet_monthly_min_filename)
+  utils::download.file(url = metuk_hadcet_monthly_min_url, destfile = metuk_hadcet_monthly_min_path, mode = "wb")
 }
 
 #' Read Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Monthly Dataset
-#'
-#' @return Tibble
-#' @export
-#'
-#' @examples
-#' read_metuk_hadcet_monthly()
-read_metuk_hadcet_monthly <- function() {
-  prepare_amc_dataset(metuk_hadcet_monthly_dataset)
+read_metuk_hadcet_monthly_dataset <- function() {
   month_names <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
   col_names <- c("Year", month_names, "Annual")
   col_types <- "iddddddddddddd"
@@ -124,28 +101,12 @@ metuk_hadcet_yearly_dataset <- new_amc_dataset(
 
 
 #' Download met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Yearly Datasets
-#'
-#' @returns Dataset state
-#' @export
-#'
-#' @examples
-#' download_metuk_hadcet_monthly_dataset()
 download_metuk_hadcet_yearly_dataset <- function() {
-  run_download_amc_dataset(metuk_hadcet_monthly_dataset, {
-    # We use the monthly dataset, so nothing to do
-  })
+  # We use the monthly dataset, so nothing to do
 }
 
 #' Read Met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Yearly Dataset
-#'
-#' @return Tibble
-#' @export
-#'
-#' @examples
-#' read_metuk_hadcet_monthly()
-read_metuk_hadcet_yearly <- function() {
-  # We use the monthly dataset, so prepare it instead
-  prepare_amc_dataset(metuk_hadcet_monthly_dataset)
+read_metuk_hadcet_yearly_dataset <- function() {
   month_names <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
   col_names <- c("Year", month_names, "Annual")
   col_types <- "iddddddddddddd"

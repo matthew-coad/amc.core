@@ -6,12 +6,6 @@
 \usage{
 download_metuk_hadcet_yearly_dataset()
 }
-\value{
-Dataset state
-}
 \description{
 Download met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Yearly Datasets
-}
-\examples{
-download_metuk_hadcet_monthly_dataset()
 }

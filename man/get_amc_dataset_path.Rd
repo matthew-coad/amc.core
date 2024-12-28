@@ -18,5 +18,5 @@ Character vector
 Get path to a file within an amc dataset
 }
 \examples{
-get_amc_dataset_path(test_dataset1, "Test1.csv")
+get_amc_dataset_path(giss_ta_zonal_yearly_dataset, "Test1.csv")
 }

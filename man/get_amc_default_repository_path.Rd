@@ -13,6 +13,3 @@ File path as a character value
 This is the path used to store locally cached amc data if not specifically overridden by the
 "amc.repository.path" option.
 }
-\examples{
-get_amc_default_repository_path()
-}

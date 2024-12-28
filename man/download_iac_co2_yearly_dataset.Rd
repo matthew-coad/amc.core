@@ -6,12 +6,6 @@
 \usage{
 download_iac_co2_yearly_dataset()
 }
-\value{
-Dataset state
-}
 \description{
 Download IAC Switzerland Global CO2 Yearly Dataset
-}
-\examples{
-download_iac_co2_yearly_dataset()
 }

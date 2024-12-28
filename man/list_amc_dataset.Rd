@@ -4,7 +4,10 @@
 \alias{list_amc_dataset}
 \title{List all available amc datasets}
 \usage{
-list_amc_dataset()
+list_amc_dataset(envir = parent.frame())
+}
+\arguments{
+\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Tibble
@@ -13,5 +16,7 @@ Tibble
 List all available amc datasets
 }
 \examples{
-list_amc_dataset()
+\donttest{
+  list_amc_dataset()
+}
 }

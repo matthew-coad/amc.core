@@ -16,5 +16,8 @@ List that identifues
 Read AMC dataset state
 }
 \examples{
-read_amc_dataset_state(test_dataset1)
+\donttest{
+  read_amc_dataset_state(giss_ta_zonal_yearly_dataset)
+}
+
 }

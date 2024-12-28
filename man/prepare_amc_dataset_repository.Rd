@@ -4,10 +4,12 @@
 \alias{prepare_amc_dataset_repository}
 \title{Non-destructively prepares data set repository for use}
 \usage{
-prepare_amc_dataset_repository(dataset)
+prepare_amc_dataset_repository(dataset, envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset to prepare repository for}
+
+\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Respository path
@@ -16,5 +18,7 @@ Respository path
 Non-destructively prepares data set repository for use
 }
 \examples{
-prepare_amc_dataset_repository(test_dataset1)
+\donttest{
+ prepare_amc_dataset_repository(giss_ta_zonal_yearly_dataset)
+}
 }

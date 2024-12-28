@@ -4,7 +4,7 @@
 #' @export
 #'
 #' @examples
-#' amc_datasource_class %in% class(test_dataset1)
+#' amc_dataset_class %in% class(giss_datasource)
 amc_datasource_class <- "amc_datasource"
 
 #' Create new amc datasource
@@ -26,19 +26,23 @@ new_amc_datasource <- function(datasource_code, datasource_name, datasource_refe
 
 #' List all available amc datasources
 #'
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
 #' @return Tibble
 #' @export
 #'
 #' @examples
-#' list_amc_datasource()
-list_amc_datasource <- function() {
+#' \donttest{
+#'   list_amc_datasource()
+#' }
+list_amc_datasource <- function(envir = parent.frame()) {
   packages <- base::search() |> purrr::discard(\(x) x == ".GlobalEnv" | x == "Autoloads")
-  amc_datasource_names <- packages |>
-    purrr::map(ls) |>
-    unlist(recursive = TRUE) |>
-    unique()
-  amc_datasource <- amc_datasource_names |>
-    purrr::map(get) |>
-    purrr::keep(\(x)amc_datasource_class %in% class(x))
-  dplyr::bind_rows(amc_datasource)
+  envir_object_names = ls(envir = envir)
+  package_object_names <- packages |>
+    purrr::map(\(x) ls(x)) |>
+    unlist(recursive = TRUE)
+  object_names <- c(envir_object_names, package_object_names) |> unique()
+  amc_datasources <- object_names |>
+    purrr::map(\(x) get(x, envir=envir)) |>
+    purrr::keep(\(x) amc_datasource_class %in% class(x))
+  dplyr::bind_rows(amc_datasources)
 }

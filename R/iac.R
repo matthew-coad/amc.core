@@ -26,28 +26,13 @@ iac_co2_yearly_url <- "ftp://data.iac.ethz.ch/CMIP6/input4MIPs/UoM/GHGConc/CMIP/
 iac_co2_yearly_filename <- "mole_fraction_of_carbon_dioxide_in_air_input4MIPs_GHGConcentrations_CMIP_UoM-CMIP-1-1-0_gr3-GMNHSH_0000-2014.csv"
 
 #' Download IAC Switzerland Global CO2 Yearly Dataset
-#'
-#' @returns Dataset state
-#' @export
-#'
-#' @examples
-#' download_iac_co2_yearly_dataset()
 download_iac_co2_yearly_dataset <- function() {
-  run_download_amc_dataset(iac_co2_yearly_dataset, {
-    iac_co2_yearly_path <- get_amc_dataset_path(iac_co2_yearly_dataset, iac_co2_yearly_filename)
-    utils::download.file(url = iac_co2_yearly_url, destfile = iac_co2_yearly_path, mode = "wb")
-  })
+  iac_co2_yearly_path <- get_amc_dataset_path(iac_co2_yearly_dataset, iac_co2_yearly_filename)
+  utils::download.file(url = iac_co2_yearly_url, destfile = iac_co2_yearly_path, mode = "wb")
 }
 
 #' Read IAC Switzerland Global CO2 Yearly tibble
-#'
-#' @return AMC Tibble
-#' @export
-#'
-#' @examples
-#' read_iac_co2_yearly()
-read_iac_co2_yearly <- function() {
-  prepare_amc_dataset(iac_co2_yearly_dataset)
+read_iac_co2_yearly_dataset <- function() {
   dataset_path <- get_amc_dataset_path(iac_co2_yearly_dataset, iac_co2_yearly_filename)
   cols <- readr::cols(
     year = readr::col_double(),

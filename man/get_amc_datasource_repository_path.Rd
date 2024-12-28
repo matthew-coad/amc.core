@@ -16,5 +16,5 @@ File path
 Get Path used to store data related to a specific datasource
 }
 \examples{
-get_amc_datasource_repository_path(test_dataset1)
+get_amc_datasource_repository_path(giss_datasource)
 }

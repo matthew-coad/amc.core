@@ -3,7 +3,7 @@
 #' @export
 #'
 #' @examples
-#' amc_dataset_class %in% class(test_dataset1)
+#' amc_dataset_class %in% class(giss_ta_zonal_yearly_dataset)
 amc_dataset_class <- "amc_dataset"
 
 #' Create new amc dataset
@@ -16,7 +16,16 @@ amc_dataset_class <- "amc_dataset"
 #' @export
 #'
 #' @examples
-#' new_amc_dataset(test_datasource, "test_dataset1", "Test dataset1")
+#' example_datasource <- new_amc_datasource(
+#'   "example",
+#'   "AMC Example datasource",
+#'   "https://example.com/"
+#' )
+#' example_1_dataset <- new_amc_dataset(
+#'   example_datasource,
+#'   "example_1",
+#'   "AMC Example Dataset 1"
+#' )
 new_amc_dataset <- function(datasource, dataset_code, dataset_name) {
   dataset <- tibble::tibble(
     datasource_code = datasource$datasource_code,
@@ -29,33 +38,60 @@ new_amc_dataset <- function(datasource, dataset_code, dataset_name) {
 
 #' List all available amc datasets
 #'
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
+#'
 #' @return Tibble
 #' @export
 #'
 #' @examples
-#' list_amc_dataset()
-list_amc_dataset <- function() {
+#' \donttest{
+#'   list_amc_dataset()
+#' }
+list_amc_dataset <- function(envir = parent.frame()) {
   packages <- base::search() |> purrr::discard(\(x) x == ".GlobalEnv" | x == "Autoloads")
-  object_names <- packages |>
-    purrr::map(ls) |>
-    unlist(recursive = TRUE) |>
-    unique()
-  amc_datasource <- object_names |>
-    purrr::map(get) |>
-    purrr::keep(\(x)amc_dataset_class %in% class(x))
-  dplyr::bind_rows(amc_datasource)
+  envir_object_names = ls(envir = envir)
+  package_object_names <- packages |>
+    purrr::map(\(x) ls(x)) |>
+    unlist(recursive = TRUE)
+  object_names <- c(envir_object_names, package_object_names) |> unique()
+  amc_datasets <- object_names |>
+    purrr::map(\(x) get(x, envir=envir)) |>
+    purrr::keep(\(x) amc_dataset_class %in% class(x))
+  dplyr::bind_rows(amc_datasets)
+}
+
+#' Resolve value that identifies a dataset
+#'
+#' @param x Dataset identifier. Possible values include the datasets code or the dataset itself
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
+#'
+#' @returns AMC dataset
+resolve_amc_dataset <- function(x, envir = parent.frame()) {
+  if (amc_dataset_class %in% class(x)) {
+    return(x)
+  }
+  else if (is.character(x)) {
+    list_amc_dataset(envir = envir) |> dplyr::filter(.data$dataset_code == x)
+  }
+  else {
+    stop("x unexpected type")
+  }
 }
 
 #' Non-destructively prepares data set repository for use
 #'
 #' @param dataset Dataset to prepare repository for
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
 #'
 #' @return Respository path
 #' @export
 #'
 #' @examples
-#' prepare_amc_dataset_repository(test_dataset1)
-prepare_amc_dataset_repository <- function(dataset) {
+#' \donttest{
+#'  prepare_amc_dataset_repository(giss_ta_zonal_yearly_dataset)
+#' }
+prepare_amc_dataset_repository <- function(dataset, envir = parent.frame()) {
+  dataset <- resolve_amc_dataset(dataset, envir = envir)
   repository_path <- get_amc_dataset_repository_path(dataset)
   if (!file.exists(repository_path)){
     dir.create(repository_path, recursive=TRUE)
@@ -63,95 +99,52 @@ prepare_amc_dataset_repository <- function(dataset) {
   return(repository_path)
 }
 
-#' Non-destructively prepares a data set for use
-#'
-#' @param dataset Dataset to prepare
-#'
-#' @return Dataset state
-#' @export
-#'
-#' @examples
-#' prepare_amc_dataset(test_dataset1)
-prepare_amc_dataset <- function(dataset) {
-  prepare_amc_dataset_repository(dataset)
-  state <- read_amc_dataset_state(dataset)
-  if (state$status != amc_dataset_status$ready) {
-    state <- download_amc_dataset(dataset)
-  }
-  return(state)
-}
-
 #' Import datafile into an amc datasets repository
 #'
 #' @param dataset Data to import file into
 #' @param filepath Path to the file to import
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
 #'
 #' @return Import successfuly
 #' @export
 #'
 #' @examples
-#' import_amc_dataset_file(test_dataset1, "ZonAnn.Ts+dSST.csv")
-import_amc_dataset_file <- function(dataset, filepath) {
+#' \donttest{
+#'   import_amc_dataset_file(test_dataset1, "ZonAnn.Ts+dSST.csv")
+#' }
+import_amc_dataset_file <- function(dataset, filepath, envir = parent.frame()) {
+  dataset <- resolve_amc_dataset(dataset, envir = envir)
   repository_path <- prepare_amc_dataset_repository(dataset)
   file.copy(filepath, repository_path, overwrite=TRUE)
 }
 
-#' Get underlying download dataset implementation
-#'
-#' @param dataset Target Dataset
-#' @param required If true function is required and will fail if it is missing
-#'
-#' @returns Function that takes no parameters, NULL if function cannot be found
-get_download_amc_dataset_func <- function(dataset, required = FALSE) {
-  func_name <- paste0("download_", dataset$dataset_code, "_dataset")
-  func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
-  if (required && is.null(func)) {
-    stop("dataset downloader ", func_name, " not found")
-  }
-  return(func)
-}
-
-#' Download amc dataset
+#' Download an amc dataset
 #'
 #' @param dataset Dataset to download
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
 #'
 #' @returns Updated dataset status
 #' @export
 #'
 #' @examples
-#' download_amc_dataset(test_dataset1)
-download_amc_dataset <- function(dataset) {
-  get_download_amc_dataset_func(dataset, required = TRUE)()
-}
+#' \donttest{
+#'   download_amc_dataset(giss_ta_zonal_yearly_dataset)
+#' }
+download_amc_dataset <- function(dataset, envir = parent.frame()) {
+  dataset <- resolve_amc_dataset(dataset, envir = envir)
 
-#' Run download of an amc dataset.
-#'
-#' @param dataset The dataset to download
-#' @param downloader The script block that performs customised download
-#' @param envir The environment in which expr is to be evaluated.
-#'
-#'
-#' @returns Updated dataset status
-#' @export
-#'
-#' @examples
-#' run_download_amc_dataset(test_dataset1, {
-#'   test_datafile1_filepath <- get_amc_dataset_path(test_dataset1, test_datafile1_filename)
-#'   fileConn<-file(test_datafile1_filepath)
-#'   data_lines <- c(
-#'     "test_dimension1,test_measure1,test_measure2",
-#'     "Dimension-1-1,11,12",
-#'     "Dimension-2-1,21,22"
-#'   )
-#'   writeLines(data_lines, fileConn)
-#'   close(fileConn)
-#' })
-run_download_amc_dataset <- function(dataset, downloader, envir = parent.frame()) {
-  prepare_amc_dataset_repository(dataset)
+  func_name <- paste0("download_", dataset$dataset_code, "_dataset")
+  func <- tryCatch(get(func_name, envir = envir), error = function(cond) NULL)
+  if (is.null(func)) {
+    stop("dataset downloader ", func_name, " not found")
+  }
+
+  repository_path <- prepare_amc_dataset_repository(dataset)
   save_amc_dataset_state(dataset, amc_dataset_status$downloading)
+
   download_cond <- NULL
   tryCatch(
-    eval(downloader, envir = envir),
+    func(),
     error = function(cond) {
       download_cond <<- cond
       message(conditionMessage(cond))
@@ -164,30 +157,54 @@ run_download_amc_dataset <- function(dataset, downloader, envir = parent.frame()
   }
 }
 
-#' Get underlying read dataset implementation
+
+#' Prepares a data set for use, including creating directories and downloading the data from
+#' its source if needed.
 #'
-#' @param dataset Target Dataset
-#' @param required If true function is required and will fail if it is missing
+#' By default prepare is non-destructive and will leave existing resource in place
 #'
-#' @returns Function that takes no parameters, NULL if function cannot be found
-get_read_amc_dataset_func <- function(dataset, required = FALSE) {
-  func_name <- paste0("read_", dataset$dataset_code)
-  func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
-  if (required && is.null(func)) {
-    stop("dataset reader ", func_name, " not found")
+#' @param dataset Dataset to prepare
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
+#'
+#' @return Dataset state
+#' @export
+#'
+#' @examples
+#' \donttest{
+#'   prepare_amc_dataset(giss_ta_zonal_yearly_dataset)
+#' }
+prepare_amc_dataset <- function(dataset, envir = parent.frame()) {
+  dataset <- resolve_amc_dataset(dataset, envir = envir)
+  prepare_amc_dataset_repository(dataset)
+  state <- read_amc_dataset_state(dataset)
+  if (state$status != amc_dataset_status$ready) {
+    state <- download_amc_dataset(dataset, envir = envir)
   }
-  return(func)
+  return(state)
 }
 
 #' Read amc dataset data
 #'
 #' @param dataset Dataset to read
+#' @param envir Where to look for datasets objects. Defaults to parent frame.
 #'
 #' @returns Datasets data as AMC validated tibble
 #' @export
 #'
 #' @examples
-#' read_amc_dataset(test_dataset1)
-read_amc_dataset <- function(dataset) {
-  get_read_amc_dataset_func(dataset, required = TRUE)()
+#' \donttest{
+#'   read_amc_dataset(test_dataset1)
+#' }
+read_amc_dataset <- function(dataset, envir = parent.frame()) {
+  dataset <- resolve_amc_dataset(dataset, envir = envir)
+  state <- prepare_amc_dataset(dataset)
+  if (state$status != amc_dataset_status$ready) {
+    stop("Dataset ", dataset$dataset_name, " is not ready")
+  }
+  func_name <- paste0("read_", dataset$dataset_code, "_dataset")
+  func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
+  if (is.null(func)) {
+    stop("dataset reader ", func_name, " not found")
+  }
+  func()
 }

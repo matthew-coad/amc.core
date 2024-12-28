@@ -20,5 +20,14 @@ Dataset tibble
 Create new amc dataset
 }
 \examples{
-new_amc_dataset(test_datasource, "test_dataset1", "Test dataset1")
+example_datasource <- new_amc_datasource(
+  "example",
+  "AMC Example datasource",
+  "https://example.com/"
+)
+example_1_dataset <- new_amc_dataset(
+  example_datasource,
+  "example_1",
+  "AMC Example Dataset 1"
+)
 }

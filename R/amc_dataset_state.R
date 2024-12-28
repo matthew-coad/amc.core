@@ -40,7 +40,10 @@ new_amc_dataset_state <- function(dataset, status, prepare_date = NULL, fail_con
 #' @export
 #'
 #' @examples
-#' read_amc_dataset_state(test_dataset1)
+#' \donttest{
+#'   read_amc_dataset_state(giss_ta_zonal_yearly_dataset)
+#' }
+#'
 read_amc_dataset_state <- function(dataset) {
   state_filepath <- get_amc_dataset_state_path(dataset)
   if (!file.exists(state_filepath)) {
@@ -61,7 +64,9 @@ read_amc_dataset_state <- function(dataset) {
 #' @export
 #'
 #' @examples
-#' save_amc_dataset_state(test_dataset1, amc_dataset_status$ready)
+#' \donttest{
+#'   save_amc_dataset_state(giss_ta_zonal_yearly_dataset, amc_dataset_status$ready)
+#' }
 save_amc_dataset_state <- function(dataset, status, prepare_date = NULL, fail_condition = NULL) {
   prepare_amc_dataset_repository(dataset)
   state_filepath <- get_amc_dataset_state_path(dataset)

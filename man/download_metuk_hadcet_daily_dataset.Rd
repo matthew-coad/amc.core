@@ -6,12 +6,6 @@
 \usage{
 download_metuk_hadcet_daily_dataset()
 }
-\value{
-Dataset state
-}
 \description{
 Download Hadley Centre Central England Temperature (HadCET) Daily Dataset
-}
-\examples{
-download_metuk_hadcet_daily_dataset()
 }

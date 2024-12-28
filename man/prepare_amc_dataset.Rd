@@ -2,19 +2,24 @@
 % Please edit documentation in R/amc_dataset.R
 \name{prepare_amc_dataset}
 \alias{prepare_amc_dataset}
-\title{Non-destructively prepares a data set for use}
+\title{Prepares a data set for use, including creating directories and downloading the data from
+its source if needed.}
 \usage{
-prepare_amc_dataset(dataset)
+prepare_amc_dataset(dataset, envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset to prepare}
+
+\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Dataset state
 }
 \description{
-Non-destructively prepares a data set for use
+By default prepare is non-destructive and will leave existing resource in place
 }
 \examples{
-prepare_amc_dataset(test_dataset1)
+\donttest{
+  prepare_amc_dataset(giss_ta_zonal_yearly_dataset)
+}
 }

@@ -14,6 +14,6 @@ amc_datasource_class
 Class that indicates an object is an amc datasource
 }
 \examples{
-amc_datasource_class \%in\% class(test_dataset1)
+amc_dataset_class \%in\% class(giss_datasource)
 }
 \keyword{datasets}
