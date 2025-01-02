@@ -26,7 +26,6 @@ new_amc_datasource <- function(datasource_code, datasource_name, datasource_refe
 
 #' List all available amc datasources
 #'
-#' @param envir Where to look for datasets objects. Defaults to parent frame.
 #' @return Tibble
 #' @export
 #'
@@ -34,15 +33,14 @@ new_amc_datasource <- function(datasource_code, datasource_name, datasource_refe
 #' \donttest{
 #'   list_amc_datasource()
 #' }
-list_amc_datasource <- function(envir = parent.frame()) {
+list_amc_datasource <- function() {
   packages <- base::search() |> purrr::discard(\(x) x == ".GlobalEnv" | x == "Autoloads")
-  envir_object_names = ls(envir = envir)
   package_object_names <- packages |>
     purrr::map(\(x) ls(x)) |>
     unlist(recursive = TRUE)
-  object_names <- c(envir_object_names, package_object_names) |> unique()
+  object_names <- package_object_names |> unique()
   amc_datasources <- object_names |>
-    purrr::map(\(x) get(x, envir=envir)) |>
+    purrr::map(\(x) get(x)) |>
     purrr::keep(\(x) amc_datasource_class %in% class(x))
   dplyr::bind_rows(amc_datasources)
 }

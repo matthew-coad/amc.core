@@ -11,7 +11,7 @@ test_that("New datasource class includes amc_datasource_class", {
 })
 
 test_that("list_amc_datasource includes test dataset", {
-  datasources <- list_amc_datasource(envir = test_envir)
-  test_dataset <- datasources |> dplyr::filter(datasource_code == test_datasource$datasource_code)
-  expect_equal(test_dataset$datasource_code,  test_dataset1$datasource_code)
+  datasources <- list_amc_datasource()
+  actual_datasource <- datasources |> dplyr::filter(datasource_code == test_datasource$datasource_code)
+  expect_equal(actual_datasource$datasource_code,  test_datasource$datasource_code)
 })
