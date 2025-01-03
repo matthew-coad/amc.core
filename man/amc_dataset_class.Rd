@@ -14,6 +14,6 @@ amc_dataset_class
 Class that indicates an object is an amc dataset
 }
 \examples{
-amc_dataset_class \%in\% class(giss_ta_zonal_yearly_dataset)
+amc_dataset_class \%in\% class(amctest_quick)
 }
 \keyword{datasets}

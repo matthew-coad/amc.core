@@ -2,32 +2,47 @@
 % Please edit documentation in R/amc_dataset.R
 \name{new_amc_dataset}
 \alias{new_amc_dataset}
-\title{Create new amc dataset}
+\title{Create new AMC dataset}
 \usage{
-new_amc_dataset(datasource, dataset_code, dataset_name)
+new_amc_dataset(
+  datasource,
+  name,
+  synopsis,
+  title,
+  reference_code = "",
+  reference_url = ""
+)
 }
 \arguments{
-\item{datasource}{Datasource that owns the dataset}
+\item{datasource}{Data source that supplies the dataset.}
 
-\item{dataset_code}{Unique dataset code}
+\item{name}{Unique name of the data set. Must be a unique short alpha+numeric lower case string prefixed with data set source code
+separated with underscore.}
 
-\item{dataset_name}{Data set name}
+\item{synopsis}{Brief synopsis that describes the data set, including observations it contains, zone, observation frequency and time period.}
+
+\item{title}{Title of the data set. Should match name referred to in reference documentation.}
+
+\item{reference_code}{Optional code that reference documentation uses to refer to the dataset}
+
+\item{reference_url}{Optional url that can be used to find reference documentation for the datraset}
 }
 \value{
-Dataset tibble
+AMC Data set list
 }
 \description{
-Create new amc dataset
+Create new AMC dataset
 }
 \examples{
 example_datasource <- new_amc_datasource(
   "example",
-  "AMC Example datasource",
+  "EXAMPLE datasource",
   "https://example.com/"
 )
 example_1_dataset <- new_amc_dataset(
   example_datasource,
   "example_1",
-  "AMC Example Dataset 1"
+  "AMCEXAMPLE, Example Dataset 1",
+  "AMC Exmple Dataset"
 )
 }

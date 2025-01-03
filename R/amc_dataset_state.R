@@ -16,7 +16,7 @@ amc_dataset_status <- list(
 )
 
 get_amc_dataset_state_path <- function(dataset) {
-  state_filename <- paste0(dataset$dataset_code, "-state.rds")
+  state_filename <- paste0(dataset$name, "-state.rds")
   state_filepath <- get_amc_dataset_path(dataset, state_filename)
   state_filepath
 }
@@ -41,7 +41,7 @@ new_amc_dataset_state <- function(dataset, status, prepare_date = NULL, fail_con
 #'
 #' @examples
 #' \donttest{
-#'   read_amc_dataset_state(giss_ta_zonal_yearly_dataset)
+#'   read_amc_dataset_state(amctest_quick)
 #' }
 #'
 read_amc_dataset_state <- function(dataset) {
@@ -65,7 +65,7 @@ read_amc_dataset_state <- function(dataset) {
 #'
 #' @examples
 #' \donttest{
-#'   save_amc_dataset_state(giss_ta_zonal_yearly_dataset, amc_dataset_status$ready)
+#'   save_amc_dataset_state(amctest_quick, amc_dataset_status$ready)
 #' }
 save_amc_dataset_state <- function(dataset, status, prepare_date = NULL, fail_condition = NULL) {
   prepare_amc_dataset_repository(dataset)

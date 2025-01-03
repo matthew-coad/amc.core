@@ -17,7 +17,7 @@ Read AMC dataset state
 }
 \examples{
 \donttest{
-  read_amc_dataset_state(giss_ta_zonal_yearly_dataset)
+  read_amc_dataset_state(amctest_quick)
 }
 
 }

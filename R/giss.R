@@ -3,11 +3,12 @@
 #' @export
 #'
 #' @examples
-#' giss_datasource
-giss_datasource <- new_amc_datasource(
+#' giss
+giss <- new_amc_datasource(
   "giss",
-  "Goddard Institute for Space Studies",
-  "https://data.giss.nasa.gov/"
+  "Goddard Institute for Space Studies (GISS)",
+  reference_code = "GISS",
+  reference_url = "https://data.giss.nasa.gov/"
 )
 
 #' GISS Zonal Annual Mean Temperature Anomaly
@@ -15,26 +16,29 @@ giss_datasource <- new_amc_datasource(
 #' @export
 #'
 #' @examples
-#' giss_ta_zonal_yearly_dataset
-giss_ta_zonal_yearly_dataset <- new_amc_dataset(
-  giss_datasource,
+#' giss_ta_zonal_yearly
+giss_ta_zonal_yearly <- new_amc_dataset(
+  giss,
   "giss_ta_zonal_yearly",
-  "GISS Zonal Yearly Mean Temperature Anomaly, 1880-present"
+  "GISS, Land+Sea Surface Temperature Anomaly, Zonal, Yearly, Years 1880-Present",
+  "GISS Combined Land-Surface Air and Sea-Surface Water Temperature Anomalies, Zonal annual means",
+  reference_url = "https://data.giss.nasa.gov/gistemp/"
 )
 
 giss_ta_zonal_yearly_filename <- "ZonAnn.Ts+dSST.csv"
 giss_ta_zonal_yearly_url <- "https://data.giss.nasa.gov/gistemp/tabledata_v4/ZonAnn.Ts+dSST.csv"
 
 #' Download met Office United Kingdom, Hadley Centre Central England Temperature (HadCET) Datasets
-download_giss_ta_zonal_yearly_dataset <- function() {
-  giss_ta_zonal_yearly_path <- get_amc_dataset_path(giss_ta_zonal_yearly_dataset, giss_ta_zonal_yearly_filename)
+download_giss_ta_zonal_yearly <- function() {
+  giss_ta_zonal_yearly_path <- get_amc_dataset_path(giss_ta_zonal_yearly, giss_ta_zonal_yearly_filename)
   utils::download.file(url = giss_ta_zonal_yearly_url, destfile = giss_ta_zonal_yearly_path, mode = "wb")
 }
 
+giss_ta_zonal_yearly$download <- download_giss_ta_zonal_yearly
 
 #' Read GISS Zonal Annual Mean Temperature Anomaly
-read_giss_ta_zonal_yearly_dataset <- function() {
-  temp_path <- get_amc_dataset_path(giss_ta_zonal_yearly_dataset, "ZonAnn.Ts+dSST.csv")
+read_giss_ta_zonal_yearly <- function() {
+  temp_path <- get_amc_dataset_path(giss_ta_zonal_yearly, "ZonAnn.Ts+dSST.csv")
   col_types <-
     readr::cols(
       Year = readr::col_integer(),
@@ -73,3 +77,5 @@ read_giss_ta_zonal_yearly_dataset <- function() {
       "temperature_anomaly"
     )
 }
+
+giss_ta_zonal_yearly$read <- read_giss_ta_zonal_yearly

@@ -5,12 +5,10 @@
 \title{Prepares a data set for use, including creating directories and downloading the data from
 its source if needed.}
 \usage{
-prepare_amc_dataset(dataset, envir = parent.frame())
+prepare_amc_dataset(dataset)
 }
 \arguments{
 \item{dataset}{Dataset to prepare}
-
-\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Dataset state
@@ -20,6 +18,6 @@ By default prepare is non-destructive and will leave existing resource in place
 }
 \examples{
 \donttest{
-  prepare_amc_dataset(giss_ta_zonal_yearly_dataset)
+  prepare_amc_dataset(amctest_quick)
 }
 }

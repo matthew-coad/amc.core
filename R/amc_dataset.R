@@ -3,34 +3,43 @@
 #' @export
 #'
 #' @examples
-#' amc_dataset_class %in% class(giss_ta_zonal_yearly_dataset)
+#' amc_dataset_class %in% class(amctest_quick)
 amc_dataset_class <- "amc_dataset"
 
-#' Create new amc dataset
+#' Create new AMC dataset
 #'
-#' @param datasource Datasource that owns the dataset
-#' @param dataset_code Unique dataset code
-#' @param dataset_name Data set name
+#' @param datasource Data source that supplies the dataset.
+#' @param name Unique name of the data set. Must be a unique short alpha+numeric lower case string prefixed with data set source code
+#' separated with underscore.
+#' @param synopsis Brief synopsis that describes the data set, including observations it contains, zone, observation frequency and time period.
+#' @param title Title of the data set. Should match name referred to in reference documentation.
+#' @param reference_code Optional code that reference documentation uses to refer to the dataset
+#' @param reference_url Optional url that can be used to find reference documentation for the datraset
 #'
-#' @returns Dataset tibble
+#' @returns AMC Data set list
 #' @export
 #'
 #' @examples
 #' example_datasource <- new_amc_datasource(
 #'   "example",
-#'   "AMC Example datasource",
+#'   "EXAMPLE datasource",
 #'   "https://example.com/"
 #' )
 #' example_1_dataset <- new_amc_dataset(
 #'   example_datasource,
 #'   "example_1",
-#'   "AMC Example Dataset 1"
+#'   "AMCEXAMPLE, Example Dataset 1",
+#'   "AMC Exmple Dataset"
 #' )
-new_amc_dataset <- function(datasource, dataset_code, dataset_name) {
-  dataset <- tibble::tibble(
-    datasource_code = datasource$datasource_code,
-    dataset_code,
-    dataset_name
+new_amc_dataset <- function(datasource, name, synopsis, title, reference_code = "", reference_url = "") {
+  dataset <- list(
+    datasource = datasource,
+    name = name,
+    synopsis = synopsis,
+    title = title,
+    reference_code = reference_code,
+    reference_url = reference_url,
+    download = NULL
   )
   class(dataset) <- c(amc_dataset_class, class(dataset))
   dataset
@@ -50,11 +59,33 @@ list_amc_dataset <- function() {
   package_object_names <- packages |>
     purrr::map(\(x) ls(x)) |>
     unlist(recursive = TRUE)
-  object_names <-package_object_names |> unique()
-  amc_datasets <- object_names |>
+  object_names <- package_object_names |> unique()
+  datasets <- object_names |>
     purrr::map(\(x) get(x)) |>
     purrr::keep(\(x) amc_dataset_class %in% class(x))
-  dplyr::bind_rows(amc_datasets)
+  dataset_names <- datasets |> purrr::map(\(x) x$name ) |> unlist()
+  datasets <- datasets |> purrr::set_names(nm = dataset_names)
+  datasets
+}
+
+#' View available AMC data sets as a dataframe
+#'
+#' @return Data frame containing data sets name, title, synopsis and reference title + url
+#' @export
+#'
+#' @examples
+#' \donttest{
+#'   view_amc_datasource()
+#' }
+view_amc_dataset <- function() {
+  datasources <- list_amc_dataset()
+  tibble::tibble(
+    name = unlist(purrr::map(datasources, "name")),
+    synopsis = unlist(purrr::map(datasources, "synopsis")),
+    reference_code = unlist(purrr::map(datasources, "reference_code")),
+    reference_url = unlist(purrr::map(datasources, "reference_url")),
+    title = unlist(purrr::map(datasources, "title"))
+  )
 }
 
 #' Resolve value that identifies a dataset
@@ -67,7 +98,7 @@ resolve_amc_dataset <- function(x) {
     return(x)
   }
   else if (is.character(x)) {
-    list_amc_dataset() |> dplyr::filter(.data$dataset_code == x)
+    list_amc_dataset() |> purrr::keep(\(y) y$name == x) |> purrr::pluck(1)
   }
   else {
     stop("x unexpected type")
@@ -104,7 +135,7 @@ prepare_amc_dataset_repository <- function(dataset) {
 #'
 #' @examples
 #' \donttest{
-#'   import_amc_dataset_file(test_quick_dataset, "ZonAnn.Ts+dSST.csv")
+#'   import_amc_dataset_file(amctest_quick, "ZonAnn.Ts+dSST.csv")
 #' }
 import_amc_dataset_file <- function(dataset, filepath) {
   dataset <- resolve_amc_dataset(dataset)
@@ -121,15 +152,14 @@ import_amc_dataset_file <- function(dataset, filepath) {
 #'
 #' @examples
 #' \donttest{
-#'   download_amc_dataset(giss_ta_zonal_yearly_dataset)
+#'   download_amc_dataset(amctest_quick)
 #' }
 download_amc_dataset <- function(dataset) {
   dataset <- resolve_amc_dataset(dataset)
 
-  func_name <- paste0("download_", dataset$dataset_code, "_dataset")
-  func <- tryCatch(get(func_name), error = function(cond) NULL)
+  func <- dataset$download
   if (is.null(func)) {
-    stop("dataset downloader ", func_name, " not found")
+    stop("dataset downloader not set")
   }
 
   repository_path <- prepare_amc_dataset_repository(dataset)
@@ -163,7 +193,7 @@ download_amc_dataset <- function(dataset) {
 #'
 #' @examples
 #' \donttest{
-#'   prepare_amc_dataset(giss_ta_zonal_yearly_dataset)
+#'   prepare_amc_dataset(amctest_quick)
 #' }
 prepare_amc_dataset <- function(dataset) {
   dataset <- resolve_amc_dataset(dataset)
@@ -184,18 +214,17 @@ prepare_amc_dataset <- function(dataset) {
 #'
 #' @examples
 #' \donttest{
-#'   read_amc_dataset(test_quick_dataset)
+#'   read_amc_dataset(amctest_quick)
 #' }
 read_amc_dataset <- function(dataset) {
   dataset <- resolve_amc_dataset(dataset)
   state <- prepare_amc_dataset(dataset)
   if (state$status != amc_dataset_status$ready) {
-    stop("Dataset ", dataset$dataset_name, " is not ready")
+    stop("Dataset ", dataset$title, " is not ready")
   }
-  func_name <- paste0("read_", dataset$dataset_code, "_dataset")
-  func <- tryCatch(match.fun(func_name), error = function(cond) NULL)
+  func <- dataset$read
   if (is.null(func)) {
-    stop("dataset reader ", func_name, " not found")
+    stop("dataset reader not set")
   }
   func()
 }

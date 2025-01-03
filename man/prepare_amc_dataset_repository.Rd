@@ -4,12 +4,10 @@
 \alias{prepare_amc_dataset_repository}
 \title{Non-destructively prepares data set repository for use}
 \usage{
-prepare_amc_dataset_repository(dataset, envir = parent.frame())
+prepare_amc_dataset_repository(dataset)
 }
 \arguments{
 \item{dataset}{Dataset to prepare repository for}
-
-\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Respository path

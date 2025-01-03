@@ -4,12 +4,10 @@
 \alias{resolve_amc_dataset}
 \title{Resolve value that identifies a dataset}
 \usage{
-resolve_amc_dataset(x, envir = parent.frame())
+resolve_amc_dataset(x)
 }
 \arguments{
 \item{x}{Dataset identifier. Possible values include the datasets code or the dataset itself}
-
-\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 AMC dataset

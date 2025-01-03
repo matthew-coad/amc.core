@@ -2,23 +2,25 @@
 % Please edit documentation in R/amc_datasource.R
 \name{new_amc_datasource}
 \alias{new_amc_datasource}
-\title{Create new amc datasource}
+\title{Create new AMC data source}
 \usage{
-new_amc_datasource(datasource_code, datasource_name, datasource_reference_url)
+new_amc_datasource(name, title, reference_code = "", reference_url = "")
 }
 \arguments{
-\item{datasource_code}{Code that uniquely identifies the datasource}
+\item{name}{Name of the data source. Must be a unique short alpha+numeric lower case string}
 
-\item{datasource_name}{Name of the datasource}
+\item{title}{Data source title Usually the name of the organization and reference code.}
 
-\item{datasource_reference_url}{Url to a reference or guide to the datasource}
+\item{reference_code}{Optional short code used to refer to the data source. Often associated publically with the owing organization.}
+
+\item{reference_url}{URL to a reference guide to the data source. Usually the owning organizations website.}
 }
 \value{
-Tibble
+AMC data source list
 }
 \description{
-Create new amc datasource
+Create new AMC data source
 }
 \examples{
-new_amc_datasource("test_datasource", "Test datasource", "https://example.com/")
+new_amc_datasource("test_datasource", "TEST - AMC test resources")
 }

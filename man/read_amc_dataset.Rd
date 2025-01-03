@@ -4,12 +4,10 @@
 \alias{read_amc_dataset}
 \title{Read amc dataset data}
 \usage{
-read_amc_dataset(dataset, envir = parent.frame())
+read_amc_dataset(dataset)
 }
 \arguments{
 \item{dataset}{Dataset to read}
-
-\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Datasets data as AMC validated tibble
@@ -19,6 +17,6 @@ Read amc dataset data
 }
 \examples{
 \donttest{
-  read_amc_dataset(test_dataset1)
+  read_amc_dataset(amctest_quick)
 }
 }

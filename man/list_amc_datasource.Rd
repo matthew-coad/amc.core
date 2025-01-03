@@ -4,13 +4,10 @@
 \alias{list_amc_datasource}
 \title{List all available amc datasources}
 \usage{
-list_amc_datasource(envir = parent.frame())
-}
-\arguments{
-\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
+list_amc_datasource()
 }
 \value{
-Tibble
+List of all visible amc data sources
 }
 \description{
 List all available amc datasources

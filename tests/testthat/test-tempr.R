@@ -1,3 +1,3 @@
-test_that("tempr_nhtr_dataset is valid AMC tibble", {
-  expect_valid_amc_tibble(read_amc_dataset(tempr_nhtr_dataset))
+test_that("read tempr_nhtr returns valid AMC tibble", {
+  expect_valid_amc_tibble(read_amc_dataset(tempr_nhtr))
 })

@@ -30,9 +30,9 @@ get_amc_repository_path <- function() {
 #' @export
 #'
 #' @examples
-#' get_amc_datasource_repository_path(giss_datasource)
+#' get_amc_datasource_repository_path(amctest)
 get_amc_datasource_repository_path <- function(datasource) {
-  file.path(get_amc_repository_path(), datasource$datasource_code)
+  file.path(get_amc_repository_path(), datasource$name)
 }
 
 #' Get Path used to store data related to a specific dataset
@@ -43,9 +43,9 @@ get_amc_datasource_repository_path <- function(datasource) {
 #' @export
 #'
 #' @examples
-#' get_amc_dataset_repository_path(giss_ta_zonal_yearly_dataset)
+#' get_amc_dataset_repository_path(amctest_quick)
 get_amc_dataset_repository_path <- function(dataset) {
-  file.path(get_amc_repository_path(), dataset$datasource_code, dataset$dataset_code)
+  file.path(get_amc_repository_path(), dataset$datasource$name, dataset$name)
 }
 
 #' Get path to a file within an amc dataset
@@ -57,7 +57,7 @@ get_amc_dataset_repository_path <- function(dataset) {
 #' @export
 #'
 #' @examples
-#' get_amc_dataset_path(giss_ta_zonal_yearly_dataset, "Test1.csv")
+#' get_amc_dataset_path(amctest_quick, "Test1.csv")
 get_amc_dataset_path <- function(dataset, filename) {
   file.path(get_amc_dataset_repository_path(dataset), filename)
 }

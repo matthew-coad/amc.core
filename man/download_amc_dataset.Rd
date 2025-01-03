@@ -4,12 +4,10 @@
 \alias{download_amc_dataset}
 \title{Download an amc dataset}
 \usage{
-download_amc_dataset(dataset, envir = parent.frame())
+download_amc_dataset(dataset)
 }
 \arguments{
 \item{dataset}{Dataset to download}
-
-\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Updated dataset status
@@ -19,6 +17,6 @@ Download an amc dataset
 }
 \examples{
 \donttest{
-  download_amc_dataset(giss_ta_zonal_yearly_dataset)
+  download_amc_dataset(amctest_quick)
 }
 }

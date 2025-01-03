@@ -4,14 +4,12 @@
 \alias{import_amc_dataset_file}
 \title{Import datafile into an amc datasets repository}
 \usage{
-import_amc_dataset_file(dataset, filepath, envir = parent.frame())
+import_amc_dataset_file(dataset, filepath)
 }
 \arguments{
 \item{dataset}{Data to import file into}
 
 \item{filepath}{Path to the file to import}
-
-\item{envir}{Where to look for datasets objects. Defaults to parent frame.}
 }
 \value{
 Import successfuly
@@ -21,6 +19,6 @@ Import datafile into an amc datasets repository
 }
 \examples{
 \donttest{
-  import_amc_dataset_file(test_dataset1, "ZonAnn.Ts+dSST.csv")
+  import_amc_dataset_file(amctest_quick, "ZonAnn.Ts+dSST.csv")
 }
 }

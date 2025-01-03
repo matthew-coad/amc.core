@@ -5,11 +5,12 @@ ncei_url <- "https://www.ncei.noaa.gov"
 #' @export
 #'
 #' @examples
-#' ncei_datasource
-ncei_datasource <- new_amc_datasource(
+#' ncei
+ncei <- new_amc_datasource(
   "ncei",
-  "National Centers for Environmental Information",
-  ncei_url
+  "National Centers for Environmental Information (NCEI)",
+  reference_code = "NCEI",
+  reference_url = ncei_url
 )
 
 #' NCEI total solar irradiance Dataset
@@ -17,11 +18,12 @@ ncei_datasource <- new_amc_datasource(
 #' @export
 #'
 #' @examples
-#' ncei_tsi_dataset
-ncei_tsi_dataset <- new_amc_dataset(
-  ncei_datasource,
+#' ncei_tsi
+ncei_tsi <- new_amc_dataset(
+  ncei,
   "ncei_tsi",
-  "NCEI Total solar irradiance"
+  "NCEI, Total solar irradiance",
+  "Total solar irradiance"
 )
 
 ncei_tsi_url <- "cdr-total-solar-irradiance"
@@ -34,15 +36,15 @@ get_ncei_tsi_catalog <- function() {
 }
 
 #' Download NCEI total solar irradiance datafiles to its local repository
-download_ncei_tsi_dataset <- function() {
-  message(paste("[+] downloading", ncei_datasource$datasource_name, ncei_tsi_dataset$dataset_name))
+download_ncei_tsi <- function() {
+  message(paste("[+] downloading", ncei$title, ncei_tsi$title))
   message("[i] downloading catalog")
   catalog <- get_ncei_tsi_catalog()
   http_service <- catalog$list_services()[['HTTPServer']]
   http_service_url <- paste0(ncei_url, http_service[["base"]])
   daily_catalog <- catalog$get_catalogs("daily")[["daily"]]
   datasets <- daily_catalog$list_datasets()
-  datafiles_filename <- get_amc_dataset_path(ncei_tsi_dataset, ncei_tsi_datafiles_filename)
+  datafiles_filename <- get_amc_dataset_path(ncei_tsi, ncei_tsi_datafiles_filename)
   saveRDS(datasets, file = datafiles_filename )
 
   dataset_count <- length(datasets)
@@ -53,7 +55,7 @@ download_ncei_tsi_dataset <- function() {
     filename <- dataset[['name']]
     url <- paste0(http_service_url, urlpath)
     message(paste0("[i] downloading ", filename, " (", dataset_index, " of ", dataset_count, ")"))
-    destfile <- get_amc_dataset_path(ncei_tsi_dataset, filename)
+    destfile <- get_amc_dataset_path(ncei_tsi, filename)
     utils::download.file(url = url, destfile = destfile, mode = "wb")
     dataset_index <- dataset_index + 1
   }
@@ -61,11 +63,13 @@ download_ncei_tsi_dataset <- function() {
   message("[i] Preprocessing datafiles")
   datafiles <- list_ncei_tsi_datafiles()
   converted_data  <- dplyr::bind_rows(purrr::map(datafiles, read_ncei_tsi_datafile))
-  saveRDS(converted_data, file = get_amc_dataset_path(ncei_tsi_dataset, ncei_tsi_filename))
+  saveRDS(converted_data, file = get_amc_dataset_path(ncei_tsi, ncei_tsi_filename))
 }
 
+ncei_tsi$download <- download_ncei_tsi
+
 list_ncei_tsi_datafiles <- function() {
-  datafiles <- readRDS(get_amc_dataset_path(ncei_tsi_dataset, ncei_tsi_datafiles_filename))
+  datafiles <- readRDS(get_amc_dataset_path(ncei_tsi, ncei_tsi_datafiles_filename))
   filenames <- unname(unlist(purrr::map(datafiles, "name")))
   filename_parts <- strsplit(filenames, split="_")
   filename_filter <- function(filename) {
@@ -76,7 +80,7 @@ list_ncei_tsi_datafiles <- function() {
 }
 
 read_ncei_tsi_datafile <- function(datafile) {
-  tsi_nc <- tidync::tidync(get_amc_dataset_path(ncei_tsi_dataset, datafile)) |>
+  tsi_nc <- tidync::tidync(get_amc_dataset_path(ncei_tsi, datafile)) |>
     tidync::activate("D0")
   tsi_tibble <- tsi_nc |> tidync::hyper_tibble()
   tsi_tibble |>
@@ -90,7 +94,9 @@ read_ncei_tsi_datafile <- function(datafile) {
     )
 }
 
-read_ncei_tsi_dataset <- function() {
-  readRDS(file = get_amc_dataset_path(ncei_tsi_dataset, ncei_tsi_filename))
+read_ncei_tsi <- function() {
+  readRDS(file = get_amc_dataset_path(ncei_tsi, ncei_tsi_filename))
 }
+
+ncei_tsi$read <- read_ncei_tsi
 
